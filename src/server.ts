@@ -108,6 +108,18 @@ function assertReadOnly(query: string): void {
   }
 }
 
+/**
+ * Reject IRIs containing characters that are illegal in an IRI (RFC 3987) and
+ * could otherwise break out of the `<...>` term interpolated into the
+ * describe_entity query. Well-formed IRIs never contain these, so this rejects
+ * only malformed input.
+ */
+function assertValidIri(iri: string): void {
+  if (/[\s<>"{}|\\^`]/.test(iri)) {
+    throw new Error(`[sparql-mcp] invalid IRI (illegal characters): ${iri}`);
+  }
+}
+
 // --------- MCP tools ---------
 
 function buildServer(): McpServer {
@@ -215,6 +227,7 @@ function buildServer(): McpServer {
       iri: z.string().min(1).describe('Fully-qualified IRI to describe (e.g. https://example.org/instance/Item/1).'),
     },
     async ({ iri }) => {
+      assertValidIri(iri);
       const result = await sparqlSelect(
         `SELECT ?p ?o ?g WHERE {
           { <${iri}> ?p ?o BIND(<> AS ?g) }

@@ -15,7 +15,7 @@ Knowledge graphs are a natural fit for giving agents structured, queryable conte
 | `sparql_query` | `POST /query` — runs a SELECT or ASK and returns JSON bindings |
 | `sparql_ask` | runs an `ASK` query and returns a plain `{ boolean }` |
 | `list_graphs` | `SELECT DISTINCT ?g` over `GRAPH ?g { ?s ?p ?o }`, with approximate triple counts |
-| `describe_entity` | `DESCRIBE ?subject` — returns all outgoing triples for an IRI |
+| `describe_entity` | `SELECT ?p ?o` over the IRI's outgoing edges (default and named graphs) |
 
 ## Config
 
